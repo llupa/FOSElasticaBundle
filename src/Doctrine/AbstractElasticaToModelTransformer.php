@@ -118,13 +118,14 @@ abstract class AbstractElasticaToModelTransformer extends BaseTransformer
             $objects,
             function ($a, $b) use ($idPos, $identifier, $propertyAccessor) {
                 if ($this->options['hydrate']) {
-                    return $idPos[(string) $propertyAccessor->getValue(
-                        $a,
-                        $identifier
-                    )] > $idPos[(string) $propertyAccessor->getValue($b, $identifier)];
+                    return (
+                        $idPos[(string) $propertyAccessor->getValue($a, $identifier)]
+                        >
+                        $idPos[(string) $propertyAccessor->getValue($b, $identifier)]
+                    ) ? 1 : -1;
                 }
 
-                return $idPos[$a[$identifier]] > $idPos[$b[$identifier]];
+                return ($idPos[$a[$identifier]] > $idPos[$b[$identifier]]) ? 1 : -1;
             }
         );
 

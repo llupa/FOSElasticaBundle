@@ -20,14 +20,14 @@ services:
 fos_elastica:
     clients:
         default:
-            url: "http://localhost:9200"
+            url: "http://%fos_elastica.host%:%fos_elastica.port%"
     indexes:
         fos_elastica_orm_test:
             types:
                 type:
                     properties:
                         field1: ~
-        index:
+        first_index:
             index_name: "foselastica_orm_test_%kernel.environment%"
             types:
                 type:
@@ -41,6 +41,9 @@ fos_elastica:
                         provider:
                             debug_logging: true
                     indexable_callback: 'object.isIndexable() && !object.isntIndexable()'
+        second_index:
+            index_name: "foselastica_orm_test_second_%kernel.environment%"
+            types:
                 type2:
                     properties:
                         field1: ~
@@ -49,6 +52,9 @@ fos_elastica:
                         model: FOS\ElasticaBundle\Tests\Functional\TypeObj
                         listener: ~
                     indexable_callback: [ "@indexable_service", 'isIndexable' ]
+        third_index:
+            index_name: "foselastica_orm_test_third_%kernel.environment%"
+            types:
                 type3:
                     properties:
                         field1: ~
@@ -59,6 +65,9 @@ fos_elastica:
                         provider: ~
                         listener: ~
                     indexable_callback: 'isntIndexable'
+        fourth_index:
+            index_name: "foselastica_orm_test_fourth_%kernel.environment%"
+            types:
                 type4:
                     properties:
                         field1: ~
@@ -69,6 +78,9 @@ fos_elastica:
                         provider: ~
                         listener: ~
                     indexable_callback: [ 'FOS\ElasticaBundle\Tests\Functional\app\ORM\IndexableService', 'isntIndexable' ]
+        seventh_index:
+            index_name: "foselastica_orm_test_seventh_%kernel.environment%"
+            types:
                 property_paths_type:
                     persistence:
                         driver: orm
@@ -81,6 +93,9 @@ fos_elastica:
                             property_path: coll
                         dynamic:
                             property_path: false
+        fifth_index:
+            index_name: "foselastica_orm_test_fifth_%kernel.environment%"
+            types:
                 type_with_repository:
                     properties:
                         field1: ~
@@ -91,8 +106,8 @@ fos_elastica:
                         repository: FOS\ElasticaBundle\Tests\Functional\TypeObjectRepository
                         finder: ~
                         provider: ~
-        second_index:
-            index_name: "foselastica_orm_test_second_%kernel.environment%"
+        sixth_index:
+            index_name: "foselastica_orm_test_sixth_%kernel.environment%"
             types:
                 type:
                     properties:

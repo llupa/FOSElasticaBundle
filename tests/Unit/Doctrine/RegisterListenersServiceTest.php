@@ -173,14 +173,12 @@ class RegisterListenersServiceTest extends TestCase
     public function testShouldRegisterDisableDebugLoggingByDefaultForEntityManager()
     {
         $dispatcher = $this->createDispatcherMock();
-        $dispatcher
-            ->expects($this->at(0))
+        $dispatcher->expects($this->exactly(2))
             ->method('addListener')
-            ->with(Events::PRE_FETCH_OBJECTS, $this->isInstanceOf(\Closure::class));
-        $dispatcher
-            ->expects($this->at(1))
-            ->method('addListener')
-            ->with(Events::PRE_INSERT_OBJECTS, $this->isInstanceOf(\Closure::class));
+            ->withConsecutive(
+                [Events::PRE_FETCH_OBJECTS, $this->isInstanceOf(\Closure::class)],
+                [Events::PRE_INSERT_OBJECTS, $this->isInstanceOf(\Closure::class)]
+            );
 
         $service = new RegisterListenersService($dispatcher);
 
@@ -234,50 +232,9 @@ class RegisterListenersServiceTest extends TestCase
         ]);
     }
 
-    public function testShouldRegisterDisableDebugLoggingByDefaultForMongoDBDocumentManager()
+    public function testShouldIgnoreDebugLoggingOptionForMongoDBDocumentManager()
     {
-        if (!class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
-            $this->markTestSkipped('Doctrine MongoDB ODM is not available.');
-        }
-
-        $dispatcher = $this->createDispatcherMock();
-        $dispatcher
-            ->expects($this->at(0))
-            ->method('addListener')
-            ->with(Events::PRE_FETCH_OBJECTS, $this->isInstanceOf(\Closure::class));
-        $dispatcher
-            ->expects($this->at(1))
-            ->method('addListener')
-            ->with(Events::PRE_INSERT_OBJECTS, $this->isInstanceOf(\Closure::class));
-
-        $service = new RegisterListenersService($dispatcher);
-
-        $configuration = $this->createMock(\Doctrine\MongoDB\Configuration::class);
-        $connection = $this->createMock(\Doctrine\MongoDB\Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        $manager = $this->createMock(\Doctrine\ODM\MongoDB\DocumentManager::class);
-        $manager
-            ->expects($this->once())
-            ->method('getConnection')
-            ->willReturn($connection)
-        ;
-
-        $pager = $this->createPagerMock();
-
-        $service->register($manager, $pager, [
-            'clear_object_manager' => false,
-            'sleep' => 0,
-        ]);
-    }
-
-    public function testShouldNotRegisterDisableDebugLoggingIfOptionTrueForMongoDBDocumentManager()
-    {
-        if (!class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
+        if (!\class_exists(\Doctrine\ODM\MongoDB\DocumentManager::class)) {
             $this->markTestSkipped('Doctrine MongoDB ODM is not available.');
         }
 
@@ -290,11 +247,6 @@ class RegisterListenersServiceTest extends TestCase
         $service = new RegisterListenersService($dispatcher);
 
         $manager = $this->createMock(\Doctrine\ODM\MongoDB\DocumentManager::class);
-        $manager
-            ->expects($this->never())
-            ->method('getConnection')
-        ;
-
 
         $pager = $this->createPagerMock();
 
@@ -307,7 +259,7 @@ class RegisterListenersServiceTest extends TestCase
 
     public function testShouldIgnoreDebugLoggingOptionForPHPCRManager()
     {
-        if (!class_exists(\Doctrine\ODM\PHPCR\DocumentManagerInterface::class)) {
+        if (!\interface_exists(\Doctrine\ODM\PHPCR\DocumentManagerInterface::class)) {
             $this->markTestSkipped('Doctrine PHPCR is not present');
         }
 

@@ -33,7 +33,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
      */
     protected $objectClass = 'stdClass';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->createMock(ManagerRegistry::class);
     }
@@ -66,10 +66,10 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $hybridResults = $transformer->hybridTransform([$firstElasticaResult, $secondElasticaResult, $thirdElasticaResult]);
 
         $this->assertCount(2, $hybridResults);
-        $this->assertSame($firstOrmResult, $hybridResults[0]->getTransformed());
-        $this->assertSame($firstElasticaResult, $hybridResults[0]->getResult());
-        $this->assertSame($secondOrmResult, $hybridResults[1]->getTransformed());
-        $this->assertSame($thirdElasticaResult, $hybridResults[1]->getResult());
+        $this->assertEquals($firstOrmResult, $hybridResults[0]->getTransformed());
+        $this->assertEquals($firstElasticaResult, $hybridResults[0]->getResult());
+        $this->assertEquals($secondOrmResult, $hybridResults[1]->getTransformed());
+        $this->assertEquals($thirdElasticaResult, $hybridResults[1]->getResult());
     }
 
     public function testObjectClassCanBeSet()
@@ -106,7 +106,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
 
         $transformedObjects = $transformer->transform($elasticaResults);
 
-        $this->assertSame($doctrineObjects, $transformedObjects);
+        $this->assertEquals($doctrineObjects, $transformedObjects);
     }
 
     /**
@@ -147,7 +147,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
 
         $results = $transformer->transform($elasticaResults);
 
-        $this->assertSame([], $results);
+        $this->assertEquals([], $results);
     }
 
     /**
@@ -166,7 +166,7 @@ class AbstractElasticaToModelTransformerTest extends TestCase
         $results = $transformer->transform($elasticaResults);
 
         foreach ($results as $result) {
-            $this->assertInternalType('array', $result->highlights);
+            $this->assertisArray($result->highlights);
             $this->assertNotEmpty($result->highlights);
         }
     }
@@ -188,9 +188,9 @@ class AbstractElasticaToModelTransformerTest extends TestCase
 
         $results = $transformer->transform($elasticaResults);
 
-        $this->assertSame($doctrineObjects[2], $results[0]);
-        $this->assertSame($doctrineObjects[1], $results[1]);
-        $this->assertSame($doctrineObjects[0], $results[2]);
+        $this->assertEquals($doctrineObjects[2], $results[0]);
+        $this->assertEquals($doctrineObjects[1], $results[1]);
+        $this->assertEquals($doctrineObjects[0], $results[2]);
     }
 
     /**
@@ -212,8 +212,8 @@ class AbstractElasticaToModelTransformerTest extends TestCase
 
         foreach ($results as $key => $result) {
             $this->assertInstanceOf(HybridResult::class, $result);
-            $this->assertSame($elasticaResults[$key], $result->getResult());
-            $this->assertSame($doctrineObjects[$key], $result->getTransformed());
+            $this->assertEquals($elasticaResults[$key], $result->getResult());
+            $this->assertEquals($doctrineObjects[$key], $result->getTransformed());
         }
     }
 

@@ -20,7 +20,7 @@
 
 namespace FOS\ElasticaBundle\Tests\Functional;
 
-use Elastica\Query\Match;
+use Elastica\Query\MatchQuery;
 
 /**
  * @group functional
@@ -31,16 +31,16 @@ class PropertyPathTest extends WebTestCase
     {
         static::bootKernel(['test_case' => 'ORM']);
         /** @var \FOS\ElasticaBundle\Persister\ObjectPersister $persister */
-        $persister = static::$kernel->getContainer()->get('fos_elastica.object_persister.index.property_paths_type');
+        $persister = static::$kernel->getContainer()->get('fos_elastica.object_persister.seventh_index.property_paths_type');
         $obj = new TypeObj();
         $obj->coll = 'Hello';
         $persister->insertOne($obj);
 
         /** @var \Elastica\Index $index */
-        $index = static::$kernel->getContainer()->get('fos_elastica.index.index');
+        $index = static::$kernel->getContainer()->get('fos_elastica.index.seventh_index');
         $index->refresh();
 
-        $query = new Match();
+        $query = new MatchQuery();
         $query->setField('something', 'Hello');
         $search = $index->createSearch($query);
 

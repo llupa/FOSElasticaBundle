@@ -104,7 +104,9 @@ class MappingBuilder
             $mapping['_meta']['model'] = $typeConfig->getModel();
         }
 
-        unset($mapping['_parent']['identifier'], $mapping['_parent']['property']);
+        if (isset($mapping['_parent'])) {
+            unset($mapping['_parent']);
+        }
 
         if (empty($mapping)) {
             // Empty mapping, we want it encoded as a {} instead of a []
