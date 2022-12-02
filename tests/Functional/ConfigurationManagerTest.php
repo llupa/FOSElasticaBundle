@@ -35,9 +35,8 @@ class ConfigurationManagerTest extends WebTestCase
         $index = $manager->getIndexConfiguration('index');
 
         $this->assertSame('index', $index->getName());
-        $this->assertGreaterThanOrEqual(2, count($index->getTypes()));
+        $this->assertSame(1, count($index->getTypes()));
         $this->assertInstanceOf(TypeConfig::class, $index->getType('type'));
-        $this->assertInstanceOf(TypeConfig::class, $index->getType('parent'));
     }
 
     /**

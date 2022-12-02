@@ -27,37 +27,27 @@ fos_elastica:
                         my_analyzer:
                             type: custom
                             tokenizer: lowercase
-                            filter: [my_ngram]
+                            filter: [ my_ngram ]
                     filter:
                         my_ngram:
                             type: "nGram"
                             min_gram: 3
-                            max_gram: 5
+                            max_gram: 4
             types:
-                parent:
-                    dynamic: false
-                    dynamic_templates:
-                        dates:
-                            match: "date_*"
-                            mapping:
-                                type: date
-                    properties:
-                        field1: ~
-                        field2: ~
                 type:
                     dynamic: strict
                     date_detection: false
                     dynamic_date_formats: [ 'yyyy-MM-dd' ]
                     dynamic_templates:
                         - dates:
-                            match: "date_*"
-                            mapping:
-                                type: date
+                              match: "date_*"
+                              mapping:
+                                  type: date
                         - strings:
-                            match: "*"
-                            mapping:
-                                analyzer: english
-                                type: text
+                              match: "*"
+                              mapping:
+                                  analyzer: english
+                                  type: text
                     numeric_detection: true
                     properties:
                         field1: ~
@@ -87,11 +77,10 @@ fos_elastica:
                         lastlogin: { type: date, format: basic_date_time }
                         birthday: { type: date, format: "yyyy-MM-dd" }
                         dynamic_allowed: { type: object, dynamic: true }
-                    _parent:
-                        type: "parent"
-                        property: "parent"
-                        identifier: "id"
-                null_mappings:
+        null_mappings_index:
+            index_name: 'foselastica_basic_test_%kernel.environment%'
+            types:
+                type:
                     properties: ~
         empty_index: ~
 
@@ -107,7 +96,7 @@ fos_elastica:
             types:
                 some_type:
                     properties:
-                        document_name_field_1: { type: string, index: not_analyzed }
+                        document_name_field_1: { type: keyword }
         index_template_example_2:
             client: 'default'
             template_name: 'index_template_2_name'
@@ -119,4 +108,4 @@ fos_elastica:
             types:
                 some_type:
                     properties:
-                        document_name_field_2: { type: string, index: not_analyzed }
+                        document_name_field_2: { type: keyword }

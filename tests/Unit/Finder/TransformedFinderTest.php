@@ -62,7 +62,7 @@ class TransformedFinderTest extends TestCase
 
         $results = $method->invoke($finder, '', 10);
 
-        $this->assertInternalType('array', $results);
+        $this->assertisArray($results);
     }
 
     public function testFindPaginatedReturnsAConfiguredPagerfantaObject()

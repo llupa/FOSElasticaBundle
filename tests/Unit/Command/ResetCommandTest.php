@@ -35,7 +35,7 @@ class ResetCommandTest extends TestCase
      */
     private $indexManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resetter = $this->createMock(Resetter::class);
         $this->indexManager = $this->createMock(IndexManager::class);
@@ -49,13 +49,13 @@ class ResetCommandTest extends TestCase
             ->method('getAllIndexes')
             ->will($this->returnValue(['index1' => true, 'index2' => true]));
 
-        $this->resetter->expects($this->at(0))
+        $this->resetter->expects($this->exactly(2))
             ->method('resetIndex')
-            ->with($this->equalTo('index1'));
-
-        $this->resetter->expects($this->at(1))
-            ->method('resetIndex')
-            ->with($this->equalTo('index2'));
+            ->withConsecutive(
+                [$this->equalTo('index1')],
+                [$this->equalTo('index2')]
+            )
+        ;
 
         $this->command->run(
             new ArrayInput([]),
@@ -68,7 +68,7 @@ class ResetCommandTest extends TestCase
         $this->indexManager->expects($this->never())
             ->method('getAllIndexes');
 
-        $this->resetter->expects($this->at(0))
+        $this->resetter->expects($this->once())
             ->method('resetIndex')
             ->with($this->equalTo('index1'));
 
@@ -86,7 +86,7 @@ class ResetCommandTest extends TestCase
         $this->resetter->expects($this->never())
             ->method('resetIndex');
 
-        $this->resetter->expects($this->at(0))
+        $this->resetter->expects($this->once())
             ->method('resetIndexType')
             ->with($this->equalTo('index1'), $this->equalTo('type1'));
 

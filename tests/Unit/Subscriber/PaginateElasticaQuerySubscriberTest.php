@@ -3,7 +3,7 @@
 /*
  * This file is part of the FOSElasticaBundle package.
  *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ * (c) FriendsOfSymfony <https://friendsofsymfony.github.com/>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,6 +20,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PaginateElasticaQuerySubscriberTest extends TestCase
 {
     public function testShouldDoNothingIfSortParamIsEmpty()
@@ -28,9 +31,11 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
 
         $adapter = $this->getAdapterMock();
         $adapter->expects($this->never())
-            ->method('getQuery');
+            ->method('getQuery')
+        ;
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -76,10 +81,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -94,9 +101,6 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $this->assertSame($expected, $query->getParam('sort'));
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function testShouldThrowIfFieldIsNotWhitelisted()
     {
         $subscriber = new PaginateElasticaQuerySubscriber($this->getRequestStack(new Request(['ord' => 'owner'])));
@@ -104,10 +108,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -115,9 +121,10 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
             'defaultSortFieldName' => 'createdAt',
             'sortFieldParameterName' => 'ord',
             'sortDirectionParameterName' => 'az',
-            'sortFieldWhitelist' => ['createdAt', 'updatedAt'],
+            'sortFieldAllowList' => ['createdAt', 'updatedAt'],
         ];
 
+        $this->expectException(\UnexpectedValueException::class);
         $subscriber->items($event);
     }
 
@@ -128,10 +135,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -158,10 +167,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -192,10 +203,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -233,10 +246,12 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         $query = new Query();
         $adapter = $this->getAdapterMock();
         $adapter->method('getQuery')
-            ->willReturn($query);
+            ->willReturn($query)
+        ;
 
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -277,9 +292,11 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
 
         $adapter = $this->getAdapterMock();
         $adapter->expects($this->never())
-            ->method('getQuery');
+            ->method('getQuery')
+        ;
         $adapter->method('getResults')
-            ->willReturn($this->getResultSetMock());
+            ->willReturn($this->getResultSetMock())
+        ;
 
         $event = new ItemsEvent(0, 10);
         $event->target = $adapter;
@@ -297,7 +314,7 @@ class PaginateElasticaQuerySubscriberTest extends TestCase
         return $this->createMock(PartialResultsInterface::class);
     }
 
-    private function getRequestStack(Request $request = null)
+    private function getRequestStack(?Request $request = null)
     {
         $stack = new RequestStack();
 

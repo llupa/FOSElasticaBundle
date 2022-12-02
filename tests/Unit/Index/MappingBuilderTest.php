@@ -33,7 +33,7 @@ class MappingBuilderTest extends TestCase
      */
     private $typeMapping;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->typeMapping = [
             'properties' => [
@@ -48,9 +48,6 @@ class MappingBuilderTest extends TestCase
                     'type' => 'text',
                     'store' => false,
                 ],
-            ],
-            '_parent' => [
-                'type' => 'parent_type',
             ],
         ];
         $this->typeConfig = new TypeConfig('typename', [
@@ -67,11 +64,6 @@ class MappingBuilderTest extends TestCase
                     'store' => false,
                 ],
             ],
-            '_parent' => [
-                'type' => 'parent_type',
-                'identifier' => 'name',
-                'property' => 'parent_property',
-            ],
         ]);
         $this->builder = new MappingBuilder();
     }
@@ -86,9 +78,7 @@ class MappingBuilderTest extends TestCase
         $this->assertArrayHasKey('store', $mapping['properties']['unstored']);
         $this->assertFalse($mapping['properties']['unstored']['store']);
 
-        $this->assertArrayHasKey('_parent', $mapping);
-        $this->assertArrayNotHasKey('identifier', $mapping['_parent']);
-        $this->assertArrayNotHasKey('property', $mapping['_parent']);
+        $this->assertArrayNotHasKey('_parent', $mapping);
     }
 
     public function testBuildIndexTemplateMapping()

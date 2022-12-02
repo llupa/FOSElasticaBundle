@@ -211,7 +211,7 @@ class InPlacePagerPersisterTest extends TestCase
         $objectPersisterMock
             ->expects($this->exactly(3))
             ->method('insertMany')
-            ->withConsecutive($this->identicalTo([$firstPage]), $this->identicalTo([$secondPage]), $this->identicalTo([$thirdPage]))
+            ->withConsecutive([$this->identicalTo($firstPage)], [$this->identicalTo($secondPage)], [$this->identicalTo($thirdPage)])
         ;
 
         $registryMock = $this->createPersisterRegistryStub($objectPersisterMock);
@@ -243,7 +243,7 @@ class InPlacePagerPersisterTest extends TestCase
         $objectPersisterMock
             ->expects($this->once())
             ->method('insertMany')
-            ->withConsecutive($this->identicalTo([$secondPage]))
+            ->with($this->identicalTo($secondPage))
         ;
 
         $registryMock = $this->createPersisterRegistryStub($objectPersisterMock);

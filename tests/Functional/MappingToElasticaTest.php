@@ -38,7 +38,6 @@ class MappingToElasticaTest extends WebTestCase
 
         $type = $this->getType();
         $mapping = $type->getMapping();
-        $this->assertSame('parent', $mapping['type']['_parent']['type']);
 
         $this->assertSame('strict', $mapping['type']['dynamic']);
         $this->assertArrayHasKey('dynamic', $mapping['type']['properties']['dynamic_allowed']);
@@ -64,9 +63,9 @@ class MappingToElasticaTest extends WebTestCase
     {
         static::bootKernel(['test_case' => 'ORM']);
         $resetter = $this->getResetter();
-        $resetter->resetIndex('index');
+        $resetter->resetIndex('first_index');
 
-        $type = $this->getType();
+        $type = $this->getType('first_index', 'type');
         $mapping = $type->getMapping();
 
         $this->assertNotEmpty($mapping, 'Mapping was populated');
@@ -76,9 +75,9 @@ class MappingToElasticaTest extends WebTestCase
     {
         static::bootKernel(['test_case' => 'ORM']);
         $resetter = $this->getResetter();
-        $resetter->resetIndexType('index', 'type');
+        $resetter->resetIndexType('first_index', 'type');
 
-        $type = $this->getType();
+        $type = $this->getType('first_index', 'type');
         $mapping = $type->getMapping();
 
         $this->assertNotEmpty($mapping, 'Mapping was populated');
@@ -87,7 +86,7 @@ class MappingToElasticaTest extends WebTestCase
     public function testMappingIteratorToArrayField()
     {
         static::bootKernel(['test_case' => 'ORM']);
-        $persister = static::$kernel->getContainer()->get('fos_elastica.object_persister.index.type');
+        $persister = static::$kernel->getContainer()->get('fos_elastica.object_persister.first_index.type');
 
         $object = new TypeObj();
         $object->id = 1;
@@ -113,8 +112,8 @@ class MappingToElasticaTest extends WebTestCase
      *
      * @return \Elastica\Type
      */
-    private function getType($type = 'type')
+    private function getType($index = 'index', $type = 'type')
     {
-        return static::$kernel->getContainer()->get('fos_elastica.index.index.'.$type);
+        return static::$kernel->getContainer()->get("fos_elastica.index.$index.$type");
     }
 }
